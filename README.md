@@ -28,16 +28,16 @@
     <th width="50%">长大后的好奇</th>
   </tr>
   <tr>
-    <td width="50%"><a href="docs/promo/01-childhood.png"><img src="docs/promo/01-childhood.png" width="100%" alt="小时候，我常想象别人是怎么生活的。睡前神游到大气层附近，向下看着地面。"></a></td>
-    <td width="50%"><a href="docs/promo/02-curiosity.png"><img src="docs/promo/02-curiosity.png" width="100%" alt="长大后，这个好奇还在。我们对生活的期待不同，也有各自的体会。"></a></td>
+    <td width="50%"><a href="docs/promo/01-childhood-q.png"><img src="docs/promo/01-childhood-q.png" width="100%" alt="小时候，我常想象别人是怎么生活的。睡前神游到大气层附近，向下看着地面。"></a></td>
+    <td width="50%"><a href="docs/promo/02-curiosity-q.png"><img src="docs/promo/02-curiosity-q.png" width="100%" alt="长大后，这个好奇还在。我们对生活的期待不同，也有各自的体会。"></a></td>
   </tr>
   <tr>
     <th width="50%">不同的过法</th>
     <th width="50%">于是，有了一天</th>
   </tr>
   <tr>
-    <td width="50%"><a href="docs/promo/03-many-days.png"><img src="docs/promo/03-many-days.png" width="100%" alt="同一个今天，有很多种过法。别人的日常，也许会给明天带来一点新想法。"></a></td>
-    <td width="50%"><a href="docs/promo/04-possibilities.png"><img src="docs/promo/04-possibilities.png" width="100%" alt="于是，有了一天。把不同地方的普通日子放在一起，看看生活还有哪些可能。"></a></td>
+    <td width="50%"><a href="docs/promo/03-many-days-q.png"><img src="docs/promo/03-many-days-q.png" width="100%" alt="同一个今天，有很多种过法。别人的日常，也许会给明天带来一点新想法。"></a></td>
+    <td width="50%"><a href="docs/promo/04-possibilities-q.png"><img src="docs/promo/04-possibilities-q.png" width="100%" alt="于是，有了一天。把不同地方的普通日子放在一起，看看生活还有哪些可能。"></a></td>
   </tr>
 </table>
 
