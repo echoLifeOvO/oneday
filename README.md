@@ -22,11 +22,24 @@
 
 ## 这个想法的由来
 
-| 小时候的想象 | 长大后的好奇 |
-| :---: | :---: |
-| [![小时候，我常想象别人是怎么生活的。睡前神游到大气层附近，向下看着地面。](docs/promo/01-childhood.png)](docs/promo/01-childhood.png) | [![长大后，这个好奇还在。我们对生活的期待不同，也有各自的体会。](docs/promo/02-curiosity.png)](docs/promo/02-curiosity.png) |
-| **不同的过法** | **于是，有了一天** |
-| [![同一个今天，有很多种过法。别人的日常，也许会给明天带来一点新想法。](docs/promo/03-many-days.png)](docs/promo/03-many-days.png) | [![于是，有了一天。把不同地方的普通日子放在一起，看看生活还有哪些可能。](docs/promo/04-possibilities.png)](docs/promo/04-possibilities.png) |
+<table width="100%">
+  <tr>
+    <th width="50%">小时候的想象</th>
+    <th width="50%">长大后的好奇</th>
+  </tr>
+  <tr>
+    <td width="50%"><a href="docs/promo/01-childhood.png"><img src="docs/promo/01-childhood.png" width="100%" alt="小时候，我常想象别人是怎么生活的。睡前神游到大气层附近，向下看着地面。"></a></td>
+    <td width="50%"><a href="docs/promo/02-curiosity.png"><img src="docs/promo/02-curiosity.png" width="100%" alt="长大后，这个好奇还在。我们对生活的期待不同，也有各自的体会。"></a></td>
+  </tr>
+  <tr>
+    <th width="50%">不同的过法</th>
+    <th width="50%">于是，有了一天</th>
+  </tr>
+  <tr>
+    <td width="50%"><a href="docs/promo/03-many-days.png"><img src="docs/promo/03-many-days.png" width="100%" alt="同一个今天，有很多种过法。别人的日常，也许会给明天带来一点新想法。"></a></td>
+    <td width="50%"><a href="docs/promo/04-possibilities.png"><img src="docs/promo/04-possibilities.png" width="100%" alt="于是，有了一天。把不同地方的普通日子放在一起，看看生活还有哪些可能。"></a></td>
+  </tr>
+</table>
 
 四张图讲的是这个项目的起点。插画是想象中的生活场景，不是真实人物或住所的照片。点击图片可查看原图。[制作说明](docs/promo/README.md)
 

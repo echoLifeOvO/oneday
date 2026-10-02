@@ -59,4 +59,4 @@ MapLibre Worker 在 `predev` / `prebuild` 时从已安装依赖生成，无需�
 | A | `@` | `216.198.79.1` |
 | CNAME | `www` | `30c14ee2de4d0903.vercel-dns-017.com` |
 
-TTL 可保持默认。DNS 记录填写域名或 IP，不填写带 `https://` 的网址。域名商保存后，回 Vercel 检查配置和证书状态；添加到项目本身不代表 DNS 已经生效。步骤见 [Vercel 官方文档](https://vercel.com/docs/domains/working-with-domains/add-a-domain)。
+DNS 由 Dynadot 管理，使用「Dynadot DNS」模式，TTL 为 5 分钟。DNS 记录填写域名或 IP，不填写带 `https://` 的网址。域名商保存后，回 Vercel 检查配置和证书状态；添加到项目本身不代表 DNS 已经生效。步骤见 [Vercel 官方文档](https://vercel.com/docs/domains/working-with-domains/add-a-domain)。
