@@ -17,21 +17,22 @@
     "test:db": "node scripts/check-backend.mjs"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@vercel/functions": "^3.9.11",
+    "lucide-react": "^0.577.0",
+    "maplibre-gl": "6.11.2",
     "next": "16.3.8",
+    "pg": "^8.20.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "maplibre-gl": "6.11.2",
-    "lucide-react": "^0.577.0",
-    "pg": "^8.20.0",
-    "zod": "^4.3.6",
-    "@radix-ui/react-dialog": "^1.1.15"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "typescript": "^5.9.3",
+    "@types/geojson": "^7946.0.16",
     "@types/node": "^24",
+    "@types/pg": "^8.16.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/pg": "^8.16.0",
-    "@types/geojson": "^7946.0.16"
+    "typescript": "^5.9.3"
   }
 }

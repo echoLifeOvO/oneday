@@ -19,7 +19,17 @@ export function apiError(error: unknown) {
   if (code === "MODERATION_UNAVAILABLE" || code === "ANONYMOUS_NOT_CONFIGURED") return json({ error: code }, 503);
   if (code === "DATABASE_NOT_CONFIGURED") return json({ error: code }, 503);
   // Never echo SQL, connection strings, or private database errors to the caller.
-  console.error("[diary-api] request failed");
+  const safeReasons: Record<string, string> = {
+    "timeout exceeded when trying to connect": "pool-acquire-timeout",
+    "Connection terminated due to connection timeout": "database-connect-timeout",
+    "Connection terminated unexpectedly": "database-disconnected",
+    "Query read timeout": "database-query-timeout",
+  };
+  const dbCode = error && typeof error === "object" && "code" in error ? String(error.code) : "";
+  console.error("[diary-api] request failed", {
+    reason: safeReasons[code] || "unclassified",
+    code: /^(?:[0-9A-Z]{5}|ETIMEDOUT|ECONNRESET|ECONNREFUSED)$/.test(dbCode) ? dbCode : undefined,
+  });
   return json({ error: "SERVICE_UNAVAILABLE" }, 503);
 }
 export async function limited(group: RateGroup, action: () => Promise<Response>, request?: Request) {
