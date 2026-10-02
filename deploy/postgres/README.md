@@ -48,4 +48,4 @@ docker compose exec -u postgres postgres psql -U postgres -d one_day \
 
 这些变量都不能带 `NEXT_PUBLIC_`。owner/admin 密码及 CA 私钥不交给 Vercel。连接池每实例最多 3 条，服务端总连接上限 40；随实际实例数量评估连接代理。
 
-首次部署验证了公网 TLS 1.3、证书校验、拒绝明文、迁移和 app 角色事务内日记/评论读写，验证写入全部 ROLLBACK。首次部署没有向共享库导入示例。之后用户明确要求手机测试，已执行迁移 004 并显式添加 10 条带 is_demo 标记的虚构数据。服务器与环境变量的实际值只保存在本机忽略的 `.deployment/` 和 `.env.local`。
+首次部署验证了公网 TLS 1.3、证书校验、拒绝明文、迁移和 app 角色事务内日记/评论读写，验证写入全部 ROLLBACK。首次部署没有向共享库导入示例。之后用户明确要求手机测试，已执行迁移 004 并显式添加 13 条带 is_demo 标记的虚构数据。服务器与环境变量的实际值只保存在本机忽略的 `.deployment/` 和 `.env.local`。
