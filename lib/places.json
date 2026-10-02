@@ -1,0 +1,142 @@
+[
+  {
+    "id": "dali",
+    "name": "大理市",
+    "englishName": "Dali",
+    "region": "云南",
+    "country": "中国",
+    "countryCode": "CHN",
+    "center": [100.25, 25.68],
+    "bounds": [
+      99.97899690008694, 25.426688900372483, 100.43773249985503,
+      26.079192000110766
+    ],
+    "aliases": "大理 云南 dali yunnan",
+    "sourceShapeId": "62558664B96431386194678"
+  },
+  {
+    "id": "xihu",
+    "name": "西湖区",
+    "englishName": "Xihu",
+    "region": "浙江 · 杭州",
+    "country": "中国",
+    "countryCode": "CHN",
+    "center": [120.1, 30.25],
+    "bounds": [
+      119.99325449959554, 30.078073900090487, 120.17741809986546,
+      30.357606999763277
+    ],
+    "aliases": "杭州 西湖 浙江 hangzhou xihu",
+    "sourceShapeId": "62558664B82614955491445"
+  },
+  {
+    "id": "xuanwu",
+    "name": "玄武区",
+    "englishName": "Xuanwu",
+    "region": "江苏 · 南京",
+    "country": "中国",
+    "countryCode": "CHN",
+    "center": [118.83, 32.06],
+    "bounds": [
+      118.77892479983973, 32.01681910022137, 118.90326960031189,
+      32.108297100031166
+    ],
+    "aliases": "南京 玄武 江苏 nanjing xuanwu",
+    "sourceShapeId": "62558664B34395710413200"
+  },
+  {
+    "id": "kunshan",
+    "name": "昆山市",
+    "englishName": "Kunshan",
+    "region": "江苏 · 苏州",
+    "country": "中国",
+    "countryCode": "CHN",
+    "center": [120.98, 31.38],
+    "bounds": [
+      120.79881609978327, 31.107197099866312, 121.15766149977844,
+      31.542540500443806
+    ],
+    "aliases": "昆山 苏州 江苏 kunshan suzhou",
+    "sourceShapeId": "62558664B30540077336691"
+  },
+  {
+    "id": "yangshuo",
+    "name": "阳朔县",
+    "englishName": "Yangshuo",
+    "region": "广西 · 桂林",
+    "country": "中国",
+    "countryCode": "CHN",
+    "center": [110.49, 24.78],
+    "bounds": [
+      110.22279109972953, 24.635684900437866, 110.67800109987093,
+      25.066595100183804
+    ],
+    "aliases": "阳朔 桂林 广西 yangshuo guilin",
+    "sourceShapeId": "62558664B85229097102508"
+  },
+  {
+    "id": "kamakura",
+    "name": "镰仓市",
+    "englishName": "Kamakura",
+    "region": "神奈川县",
+    "country": "日本",
+    "countryCode": "JPN",
+    "center": [139.54, 35.32],
+    "bounds": [139.488672, 35.29958942346361, 139.59316, 35.367554],
+    "aliases": "镰仓 鎌倉 日本 kamakura japan",
+    "sourceShapeId": "22064153B40501348045878"
+  },
+  {
+    "id": "kyoto",
+    "name": "京都市",
+    "englishName": "Kyoto",
+    "region": "京都府",
+    "country": "日本",
+    "countryCode": "JPN",
+    "center": [135.77, 35.01],
+    "bounds": [135.559013, 34.874916, 135.878442, 35.321239],
+    "aliases": "京都 日本 kyoto japan",
+    "sourceShapeId": "22064153B57425006507818"
+  },
+  {
+    "id": "shibuya",
+    "name": "涩谷区",
+    "englishName": "Shibuya",
+    "region": "东京都",
+    "country": "日本",
+    "countryCode": "JPN",
+    "center": [139.7, 35.66],
+    "bounds": [139.661592, 35.641492400000025, 139.722737, 35.69209559999997],
+    "aliases": "涩谷 渋谷 东京 日本 shibuya tokyo japan",
+    "sourceShapeId": "22064153B21585833160132"
+  },
+  {
+    "id": "paris",
+    "name": "巴黎",
+    "englishName": "Paris",
+    "region": "法兰西岛",
+    "country": "法国",
+    "countryCode": "FRA",
+    "center": [2.35, 48.86],
+    "bounds": [
+      2.224219105880447, 48.81556223807286, 2.469724350790882, 48.9021475933584
+    ],
+    "aliases": "巴黎 法国 paris france",
+    "sourceShapeId": "29444166B33792924009837"
+  },
+  {
+    "id": "san-francisco",
+    "name": "旧金山",
+    "englishName": "San Francisco",
+    "region": "加利福尼亚州",
+    "country": "美国",
+    "countryCode": "USA",
+    "center": [-122.43, 37.77],
+    "bounds": [
+      -122.51449622999996, 37.70813791900008, -122.35679720099995,
+      37.832141953000075
+    ],
+    "aliases": "旧金山 三藩市 美国 san francisco california usa",
+    "sourceShapeId": "52423323B46695716253077"
+  }
+]

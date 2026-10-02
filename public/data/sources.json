@@ -1,0 +1,62 @@
+[
+  {
+    "country": "CHN",
+    "level": "ADM3",
+    "url": "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/CHN/ADM3/geoBoundaries-CHN-ADM3_simplified.geojson",
+    "author": "OpenStreetMap / Lee Beryman",
+    "license": "ODbL 1.0"
+  },
+  {
+    "country": "JPN",
+    "level": "ADM2",
+    "url": "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/JPN/ADM2/geoBoundaries-JPN-ADM2_simplified.geojson",
+    "author": "OpenStreetMap / Wambacher",
+    "license": "CC BY-SA 2.0"
+  },
+  {
+    "country": "FRA",
+    "level": "ADM2",
+    "url": "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/FRA/ADM2/geoBoundaries-FRA-ADM2_simplified.geojson",
+    "author": "IGN-F",
+    "license": "Etalab Open License 2.0"
+  },
+  {
+    "country": "USA",
+    "level": "ADM2",
+    "url": "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/USA/ADM2/geoBoundaries-USA-ADM2_simplified.geojson",
+    "author": "US Census Bureau",
+    "license": "Public domain; see upstream metadata"
+  },
+  {
+    "country": "FRA",
+    "level": "ADM1",
+    "purpose": "Overview discovery glow; not diary coverage",
+    "url": "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09/releaseData/gbOpen/FRA/ADM1/geoBoundaries-FRA-ADM1_simplified.geojson",
+    "author": "Institut national de l'information géographique et forestière (IGN-F)",
+    "license": "Etalab Open License 2.0"
+  },
+  {
+    "country": "USA",
+    "level": "ADM1",
+    "purpose": "Overview discovery glow; not diary coverage",
+    "url": "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09/releaseData/gbOpen/USA/ADM1/geoBoundaries-USA-ADM1_simplified.geojson",
+    "author": "United States Census Bureau, MAF/TIGER Database",
+    "license": "Public Domain"
+  },
+  {
+    "country": "JPN",
+    "level": "ADM1",
+    "purpose": "Overview discovery glow; not diary coverage",
+    "url": "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09/releaseData/gbOpen/JPN/ADM1/geoBoundaries-JPN-ADM1_simplified.geojson",
+    "author": "OpenStreetMap, Wambacher",
+    "license": "Open Data Commons Open Database License 1.0"
+  },
+  {
+    "country": "CHN",
+    "level": "ADM1",
+    "purpose": "Overview discovery glow; not diary coverage",
+    "url": "https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09/releaseData/gbOpen/CHN/ADM1/geoBoundaries-CHN-ADM1_simplified.geojson",
+    "author": "geoBoundaries, Wikimedia Commons",
+    "license": "Public Domain"
+  }
+]

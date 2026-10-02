@@ -1,0 +1,44 @@
+export type Place = {
+  origin?: "photon";
+  id: string;
+  name: string;
+  englishName: string;
+  region: string;
+  country: string;
+  countryCode: string;
+  center: [number, number];
+  bounds: [number, number, number, number];
+  aliases: string;
+  sourceShapeId: string;
+};
+export type Diary = {
+  id: string;
+  placeId: string;
+  nickname: string;
+  date: string;
+  createdAt?: string;
+  body: string;
+  cost: number;
+  currency: string;
+  score: number;
+  comments: Comment[];
+  commentCount?: number;
+  isDemo?: boolean;
+  isLocal?: boolean;
+};
+export type Comment = {
+  id: string;
+  nickname: string;
+  body: string;
+  createdAt?: string;
+};
+export type Focus = { placeId: string; sequence: number };
+export type PlaceStats = { count: number; minScore: number | null; maxScore: number | null; costs: { currency: string; min: number; max: number }[] };
+export type PlaceSummary = { place: Place; stats: PlaceStats };
+export type RecentPlace = { place: Place; count: number; latestPublishedAt: string };
+export type DataMode = "preview" | "database";
+export type Discovery = { mode: DataMode; places: PlaceSummary[]; nextCursor: string | null };
+export type DiaryPage = { diaries: Diary[]; nextCursor: string | null };
+export type StreamDiary = Pick<Diary, "id" | "placeId" | "cost" | "currency" | "score" | "createdAt" | "isDemo" | "isLocal"> & { place: Place };
+export type StreamPage = { mode: DataMode; diaries: StreamDiary[] };
+export type CommentPage = { comments: Comment[]; nextCursor: string | null };

@@ -1,0 +1,7 @@
+.deployment/
+.env*
+!.env.example
+evidence/
+conversation-*.md
+.cache/
+.git/

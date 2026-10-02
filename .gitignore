@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.cache/
+.env*
+!.env.example
+*.tsbuildinfo
+evidence/
+.vercel/
+public/vendor/maplibre/
+
+# Local deployment details and raw conversation archives are not public source.
+.deployment/
+conversation-*.md
+.DS_Store
+*.log
