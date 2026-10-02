@@ -8,6 +8,8 @@
 
 项目由 [echoLifeOvO](https://github.com/echoLifeOvO) 维护和合并。公开仓库允许大家提出建议和 PR，不会因此给访问者主分支的写入或合并权限。
 
+准备在本地运行或部署项目，可以阅读[开发与部署说明](docs/development/README.md)。
+
 联系作者：[X](https://x.com/echolifeovo) · [Email](mailto:echoLifeOvO@gmail.com)
 
 ## Contributing

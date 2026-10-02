@@ -1,78 +1,63 @@
 # 一天 · One Day
 
-[打开网站](https://oneday-bice.vercel.app/) · [提出想法](https://github.com/echoLifeOvO/oneday/issues)
+**看看别人怎样生活，也看看生活还有哪些可能。**
 
-看看不同地方的人，花了多少钱，怎样度过一天。
+[打开 oneday.love](https://oneday.love/) · [备用地址](https://oneday-bice.vercel.app/) · [提出想法](https://github.com/echoLifeOvO/oneday/issues) · [English](#in-english)
 
-一天是一个免费的匿名生活分享网站。转动地球、搜索城镇，或点开一条流动的日记，看看另一个人的一天；也可以留下自己的日常、花费和感受。
+一天是一个免费的匿名生活记录网站。不同地方的人，在这里写下自己的一天、当天的花费，以及自己的感受。
 
-## 功能
+## 为什么做“一天”
 
-- 三维地球与卫星影像，支持鼠标、触控板和手机触屏；有日记的地方持续点亮。
-- 从地区列表阅读日记，按日期分页；弹幕每 5 秒读取最近 12 条记录。
-- 无账户、无私聊；每次发布使用随机昵称，公开留言。
-- 正文最多 200 字，必填金额、币种与 0–100 分的主观感受，日期自动取提交当天。
-- 中英文界面、手机布局、未发布内容自动续写。
-- 日记和留言在保存前通过兼容 OpenAI 格式的内容审核服务。
+小时候，我睡前有个固定活动：躺在床上，神游天外。想象自己到了大气层附近，往下看着地面，想着不同地方的人正在怎样生活。
 
-日记地点由用户自行选择，不读取 GPS。部署在 Vercel 时，仅地球初始朝向参考请求 IP 的粗略区域。项目中的示例均明确标注为虚构内容。
+长大以后，这个好奇还在。有时假期待在家里，觉得无聊，我也会想：别人今天是怎么过的？
 
-## 开发
+最近的一次聊天，又让我想起了这件事。我们对生活的期待不同，对什么叫“过得还不错”，也有各自的体会。我想更具体地看看这些不同。
 
-TypeScript、Next.js App Router、React、MapLibre GL JS 与 PostgreSQL。使用 Node.js 22.18 或更新版本。
+所以，有了“一天”。
 
-```sh
-npm ci
-cp .env.example .env.local
-npm run dev
-# http://127.0.0.1:3107
-```
+这里像一间收集普通日子的博物馆。有人上班、做饭，有人旅行、散步，也有人只是待在家里。做了什么，花了多少，今天感觉怎样，都可以留下来。
 
-未配置数据库的本地开发提供有标记的预览数据；生产环境需要真实数据库。发布功能还需配置审核服务。填写服务端变量时，参照 [数据库与审核说明](db/README.md)。
+我希望它能让大家看到更多生活的可能。那些自己没经历过的日常，也许会给明天带来一点新想法。
 
-```sh
-npm test
-npm run build
-npm start
+## 这个想法的由来
 
-# 手机与电脑连接同一局域网，使用生产构建检查手感
-npm run start:lan
-# http://电脑的局域网IP:3107
-```
+| 小时候的想象 | 长大后的好奇 |
+| :---: | :---: |
+| [![小时候，我常想象别人是怎么生活的。睡前神游到大气层附近，向下看着地面。](docs/promo/01-childhood.png)](docs/promo/01-childhood.png) | [![长大后，这个好奇还在。我们对生活的期待不同，也有各自的体会。](docs/promo/02-curiosity.png)](docs/promo/02-curiosity.png) |
+| **不同的过法** | **于是，有了一天** |
+| [![同一个今天，有很多种过法。别人的日常，也许会给明天带来一点新想法。](docs/promo/03-many-days.png)](docs/promo/03-many-days.png) | [![于是，有了一天。把不同地方的普通日子放在一起，看看生活还有哪些可能。](docs/promo/04-possibilities.png)](docs/promo/04-possibilities.png) |
 
-局域网开发热更新使用 `npm run dev:lan`，并在 `DEV_ALLOWED_ORIGINS` 填入电脑的局域网 IP。生产预览修改代码后需要重新构建、启动。
+四张图讲的是这个项目的起点。插画是想象中的生活场景，不是真实人物或住所的照片。点击图片可查看原图。[制作说明](docs/promo/README.md)
 
-MapLibre Worker 在 `predev` / `prebuild` 时从已安装依赖生成，无需提交 `public/vendor/maplibre/`。地图边界、远景瓦片与处理脚本随项目提供；具体街区影像按需加载。
+## 在这里，可以做什么
 
-## 部署到 Vercel
+- **看看别人的一天。** 转动地球，或搜索一个地方。有日记的地区会一直亮着，靠近后可以打开当地的记录；点一条流过屏幕的弹幕，也能直接走进那个人的一天。地区里可以查看不同日期的日记，点开卡片后左右切换。
+- **留下自己的一天。** 写一段最多 200 字的记录，自行选择县市或城镇，填上这一天大概的花费、币种，以及 0–100 分的个人感受。没有标题，日期自动使用发布当天。
+- **公开聊两句。** 无需注册或登录，每次发布使用随机名字。可以公开留言，没有私聊。
 
-导入此 GitHub 仓库，选择 Next.js、根目录 `./`，构建命令使用 `npm run build`。`main` 为生产分支，推送或合并后由 Vercel 自动构建部署。
+分数只是记录者当天的主观感受。普通的一天也可以写，不需要先发生什么特别的事。
 
-在项目 **Production** 环境配置以下变量：
+网站支持中英文界面和手机浏览。日记地点由你自己选择，不读取 GPS；地球首次朝向可能参考请求 IP 的大致区域。日记与留言通过内容审核后发布，更多说明见[特别声明](https://oneday.love/sources)。
 
-| 变量 | 用途 |
-| --- | --- |
-| `DATABASE_URL` | PostgreSQL 应用角色连接串，包含主机、端口、库名、用户名和密码 |
-| `PGSSL_CA_BASE64` | 自建 PostgreSQL 的 CA 公钥证书，base64 PEM，启用服务端证书校验 |
-| `MODERATION_API_KEY` | 审核服务 API Key |
-| `MODERATION_BASE_URL` | 兼容 OpenAI 的审核服务地址 |
-| `MODERATION_MODEL` | 审核模型名称 |
-| `ANONYMOUS_COOKIE_SECRET` | 至少 32 位的随机签名密钥，各实例保持一致 |
+## 一起把它做得更好
 
-这些变量均为服务端配置，不能使用 `NEXT_PUBLIC_` 前缀。数据库迁移由维护者显式执行，不在构建中自动执行；Vercel 使用权限有限的应用角色。生产凭据仅配置到 Production，外部 PR 的 Preview 不使用生产数据库和审核密钥。
+如果你觉得哪里不好用，或者想到一种更有意思的玩法，欢迎[提一个 Issue](https://github.com/echoLifeOvO/oneday/issues)。不必会写代码，像产品经理一样说说你的想法、遇到的问题，以及为什么想改就行。
 
-自建 PostgreSQL 的 Docker、TLS 与角色配置见 [部署模板](deploy/postgres/README.md)。当前共享测试库中的 `is_demo` 数据均有示例标记，种子脚本不会自动运行。
+也欢迎 Fork 后提交 PR。由我来维护和合并主分支，大家通过 Issue 和 PR 一起参与。具体见[参与说明](CONTRIBUTING.md)。
 
-## 参与
-
-有想法可以直接 [提 Issue](https://github.com/echoLifeOvO/oneday/issues)，也欢迎 Fork 后提交 PR。由 [echoLifeOvO](https://github.com/echoLifeOvO) 维护并更新主分支；公开访问不授予写入或合并权限。详见 [参与说明](CONTRIBUTING.md)。
-
-联系作者：[X](https://x.com/echolifeovo) · [Email](mailto:echoLifeOvO@gmail.com)
-
-## 素材与来源
-
-地图影像、行政边界与角色素材分别适用其来源和许可说明，不能从代码公开推定所有素材都能自由商用。页面中的 [特别声明](app/sources/page.tsx)、[地区来源](public/data/sources.json)、[远景影像许可](public/imagery/2024/README.md) 保留了具体出处。
+联系作者：[X · @echolifeovo](https://x.com/echolifeovo) · [echoLifeOvO@gmail.com](mailto:echoLifeOvO@gmail.com)
 
 ## In English
 
-One Day is a free, anonymous collection of everyday lives. Explore a globe to see where people live, what a day costs them, and how it feels. Share up to 200 characters with a location, spending and a personal score. Ideas and pull requests are welcome; the maintainer reviews and merges contributions.
+**See how others live, and discover more possibilities for your own day.**
+
+As a child, I had a bedtime habit: lying in bed, I would imagine looking down at Earth from near the edge of the atmosphere, wondering how people in other places were living.
+
+That curiosity stayed with me. A recent conversation reminded me that people have different expectations of life and different ideas of what a good day feels like. I wanted to see those differences through ordinary, concrete days.
+
+So I made One Day: a free, anonymous collection of everyday lives. Some people work, cook or travel; others go for a walk or simply stay at home. A day you have never experienced might give you a new idea for tomorrow.
+
+Explore the globe, search a town, or click a passing diary. Share up to 200 characters with a chosen location, daily spending, currency, and a personal score from 0 to 100. The date is set to today. No account is needed; each post gets a random nickname. Conversations happen through public comments, with no private messaging. The interface supports Chinese and English, including mobile browsers.
+
+Ideas are welcome in [Issues](https://github.com/echoLifeOvO/oneday/issues), even if you do not code. You can also fork the repository and open a PR; the maintainer reviews and merges contributions.
