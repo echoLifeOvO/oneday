@@ -1,5 +1,7 @@
 # 一天 · One Day
 
+[打开网站](https://oneday-bice.vercel.app/) · [提出想法](https://github.com/echoLifeOvO/oneday/issues)
+
 看看不同地方的人，花了多少钱，怎样度过一天。
 
 一天是一个免费的匿名生活分享网站。转动地球、搜索城镇，或点开一条流动的日记，看看另一个人的一天；也可以留下自己的日常、花费和感受。
