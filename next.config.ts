@@ -1,10 +1,11 @@
 import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
+  output: "standalone",
   reactStrictMode: true,
   poweredByHeader: false,
   devIndicators: false,
   async headers() {
-    return [{ source: "/imagery/2024/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] }];
+    return [{ source: "/data/discovery-v1/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=86400" }] }, { source: "/imagery/2024/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] }];
   },
   allowedDevOrigins: (process.env.DEV_ALLOWED_ORIGINS ?? "127.0.0.1").split(",").map(host => host.trim()).filter(Boolean),
 };

@@ -35,9 +35,12 @@ try {
   const a=input(places[0]), b=input(places[1]);
   const first=await repo.publish(a,a.place);
   assert.equal(first.created,true);assert.equal(first.diary.isDemo,undefined);assert.equal(first.diary.isLocal,undefined);
+  assert.match(first.diary.nickname,/^Traveler D-[a-z0-9]{25}$/);
+  assert.equal((await repo.publish(a,a.place)).diary.nickname,first.diary.nickname);
   assert.equal((await repo.publish(a,a.place)).created,false);
   await assert.rejects(repo.publish({...a,body:'Changed'},a.place),/REQUEST_CONFLICT/);
   const second=await repo.publish(b,b.place);
+  assert.notEqual(first.diary.nickname,second.diary.nickname);
   const again=await repo.publish(input(a.place,{currency:'USD',cost:5,score:99}),a.place);
   const recent=(await repo.recentPlaces(5)).places;
   assert.deepEqual(recent.map(p=>p.place.id),[a.place.id,b.place.id]);assert.equal(recent[0].count,2);
@@ -49,6 +52,7 @@ try {
   const concurrent=input(places[2]);
   const retry=await Promise.all(Array.from({length:5},()=>repo.publish(concurrent,concurrent.place)));
   assert.equal(retry.filter(r=>r.created).length,1);
+  assert.equal(new Set(retry.map(r=>r.diary.nickname)).size,1);
   // Deliberate sub-millisecond publication ties exercise SQL cursor precision.
   const ids=[];
   for(let i=0;i<4;i++) { const result=await repo.publish(input(places[3]),places[3]);ids.push(result.diary.id);

@@ -1,35 +1,35 @@
 import type { Place } from "./types";
 export type Locale = "zh" | "en";
 const zh = {
-  contactCreator: "联系作者与参与项目", creatorX: "作者的 X 账户", email: "邮箱", shareIdea: "有想法？提个 Issue", pullRequestsWelcome: "，也欢迎 PR。", maintainerNote: "我来维护和合并，一起让它更好用。",
+  contactCreator: "联系作者", creatorX: "作者的 X 账户", email: "邮箱",
   title: "一天 · 看见世界的日常", searchPlaceholder: "搜个地方，看看大家的一天", searchLabel: "搜索地名", closeSearch: "关闭地点搜索",
   placePlaceholder: "输入城镇或区县名称", choosePlace: "选择地点", closePlace: "关闭地点选择", searchResults: "地点搜索结果",
   searching: "正在找这个地方…", searchFailed: "地点搜索暂时不可用，请稍后再试。", placeSaveFailed: "无法保留地点，请检查浏览器存储后重试。",
   noPlaces: "没有找到，试试完整的城镇或区县名称。", suggestions: "最近有人写下一天的地方", recentPlaces: "最近选过的地方", write: "写下一天", writeMine: "写下我的一天",
   globeLoading: "正在打开地球", globeWaiting: "地图正在准备，请稍等一下。", saved: "已发布到本机预览，尚未公开。", readFailed: "本机记录暂时无法读取，已有内容未被覆盖。",
-  replyPlaceholder: "写下你的回应，最多 200 字", reply: "回应", rateLimited: "现在有点忙，请稍后再试。",
+  replyPlaceholder: "写一句回应…", reply: "留言内容", sendReply: "发送留言", backDiary: "返回日记", replyLoading: "正在读取留言…", replyLoadFailed: "留言暂时无法读取。", replySent: "留言已发送", rateLimited: "现在有点忙，请稍后再试。",
   published: "已发布。", publishing: "发布中…", dataLoading: "正在读取日记…", dataFailed: "日记暂时无法读取，请重试。", loadMore: "加载更多", retry: "重试",
   composeTitle: "今天过得怎么样？", todayIn: "今天我在", todayCost: "为今天的生活，我支付了", bodyPlaceholder: "描述你的生活，为其他人提供一些参考。", bodyLabel: "这一天的记录",
   costLabel: "这一天的花费", moodLabel: "这一天的感受", moodSlider: "今天的感受", currency: "币种", chooseCurrency: "选择币种", publish: "发布", localPreview: "仅本机预览",
   backHome: "返回主页", invalid: "请检查填写的内容", missingPlace: "请选择一个地点", missingBody: "写一点今天的事情吧", longBody: "正文最多 200 字", invalidCost: "请填写 0 到 100,000,000 之间的金额", moderationRejected: "未审核通过，发布失败", moderationUnavailable: "审核暂时不可用，请稍后重试", saveFailed: "没能发布，请重试。你写的内容还在这里。",
   example: "示例", fictional: "虚构示例", localRecord: "本机记录", points: "分", list: "列表", diaryList: "日记列表", diaryCard: "日记卡", closeList: "关闭日记列表", closeCard: "关闭日记卡", backList: "返回日记列表",
-  deckHelp: "点列表项阅读完整日记，左右切换；返回列表后继续浏览。", emptyDiary: "这里还没有人留下一天。", responses: "公开回应", noResponses: "还没有回应。", showResponses: "查看回应", hideResponses: "收起回应", turnDiary: "切换日记", previous: "上一张", next: "下一张",
+  deckHelp: "点列表项阅读完整日记，左右切换；点留言阅读或写下回应，也可以返回日记。", emptyDiary: "这里还没有人留下一天。", responses: "留言", noResponses: "还没有留言，写一句回应吧。", showResponses: "查看留言", turnDiary: "切换日记", previous: "上一张", next: "下一张",
   stream: "正在流动的日记", sources: "特别声明", mapLabel: "三维地球，双指滑动或拖动旋转，捏合缩放，点击地表继续放大", mapFailed: "暂时无法显示地球，请使用支持 WebGL 的浏览器。", boundariesFailed: "地点暂时没能加载，请刷新重试。", score: "评分", spent: "花费",
 };
 const en: Record<keyof typeof zh, string> = {
-  contactCreator: "Contact the creator and contribute", creatorX: "Creator on X", email: "Email", shareIdea: "Have an idea? Open an issue", pullRequestsWelcome: ". PRs are welcome too.", maintainerNote: "I maintain the project and merge contributions.",
+  contactCreator: "Contact the creator", creatorX: "Creator on X", email: "Email",
   title: "One Day · Everyday lives around the world", searchPlaceholder: "Find a place. See a day there.", searchLabel: "Search places", closeSearch: "Close place search",
   placePlaceholder: "Enter a town or district", choosePlace: "Choose a place", closePlace: "Close place picker", searchResults: "Place results",
   searching: "Looking for this place…", searchFailed: "Place search is unavailable. Please try again.", placeSaveFailed: "Could not keep this place. Check browser storage and try again.",
   noPlaces: "No results. Try the full town or district name.", suggestions: "Recently shared days", recentPlaces: "Recently chosen places", write: "Write a day", writeMine: "Write my day",
   globeLoading: "Opening the globe", globeWaiting: "The map is getting ready. Just a moment.", saved: "Saved in this browser preview. Not published online.", readFailed: "Could not read local diaries. Existing records have been kept.",
-  replyPlaceholder: "Write a reply, up to 200 characters", reply: "Reply", rateLimited: "A little busy right now. Please try again shortly.",
+  replyPlaceholder: "Leave a reply…", reply: "Your reply", sendReply: "Send reply", backDiary: "Back to diary", replyLoading: "Loading replies…", replyLoadFailed: "Replies are unavailable.", replySent: "Reply sent", rateLimited: "A little busy right now. Please try again shortly.",
   published: "Published.", publishing: "Publishing…", dataLoading: "Loading diaries…", dataFailed: "Diaries are unavailable. Please try again.", loadMore: "Load more", retry: "Retry",
   composeTitle: "How was your day?", todayIn: "Today I was in", todayCost: "For today's life, I spent", bodyPlaceholder: "Describe your day and give others a glimpse of a different life.", bodyLabel: "Your day",
   costLabel: "Today's spending", moodLabel: "How the day felt", moodSlider: "How today felt", currency: "Currency", chooseCurrency: "Choose currency", publish: "Publish", localPreview: "Local preview only",
   backHome: "Back to the globe", invalid: "Please check the form.", missingPlace: "Choose a place.", missingBody: "Write a little about today.", longBody: "Keep your diary within 200 characters.", invalidCost: "Enter an amount from 0 to 100,000,000.", moderationRejected: "Not approved. Publishing failed.", moderationUnavailable: "Review is temporarily unavailable. Please try again later.", saveFailed: "Could not publish. Your words are still here. Please try again.",
   example: "Demo", fictional: "Fictional example", localRecord: "Local record", points: "pts", list: "List", diaryList: "Diary list", diaryCard: "Diary card", closeList: "Close diary list", closeCard: "Close diary", backList: "Back to diary list",
-  deckHelp: "Choose a diary to read it. Browse left or right, or return to the list.", emptyDiary: "No one has left a day here yet.", responses: "Public replies", noResponses: "No replies yet.", showResponses: "Show replies", hideResponses: "Hide replies", turnDiary: "Browse diaries", previous: "Previous", next: "Next",
+  deckHelp: "Choose a diary to read it. Browse left or right, or open replies to read and respond. Return to the diary at any time.", emptyDiary: "No one has left a day here yet.", responses: "Replies", noResponses: "No replies yet. Leave a few words.", showResponses: "View replies", turnDiary: "Browse diaries", previous: "Previous", next: "Next",
   stream: "Passing diaries", sources: "Credits & notes", mapLabel: "3D globe. Swipe or drag to rotate, pinch to zoom, click to explore.", mapFailed: "The globe could not load. Please use a browser with WebGL support.", boundariesFailed: "Places could not load. Please refresh and try again.", score: "Score", spent: "Spent",
 };
 export const messages = { zh, en };

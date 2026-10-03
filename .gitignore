@@ -13,3 +13,7 @@ public/vendor/maplibre/
 conversation-*.md
 .DS_Store
 *.log
+runtime.env
+deploy/**/secrets/
+deploy/**/tls/
+deploy/**/data/

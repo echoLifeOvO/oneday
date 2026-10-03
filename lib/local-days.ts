@@ -40,10 +40,11 @@ export function readSavedDays(): Diary[] {
 }
 export function saveDay(input: DayInput, locale: "zh" | "en" = "zh"): Diary {
   const parsed = dayInputSchema.parse(input);
+  const id = randomId();
   const day: Diary = {
     ...parsed,
-    id: randomId(),
-    nickname: nickname(locale),
+    id,
+    nickname: nickname(locale, id, "local"),
     createdAt: new Date().toISOString(),
     isLocal: true,
     comments: [],

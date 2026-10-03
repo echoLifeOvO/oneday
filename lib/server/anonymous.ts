@@ -20,7 +20,9 @@ export function verifyBrowserToken(token: string, key: string, now = Date.now())
   return timingSafeEqual(Buffer.from(expected), Buffer.from(match[3])) ? match[1] : null;
 }
 export function browserIdentity(request: Request, key = secret(), now = Date.now()) {
-  const secure = process.env.VERCEL === "1" || new URL(request.url).protocol === "https:";
+  // The self-hosted app only accepts traffic through its trusted reverse proxy.
+  const forwardedProtocol = request.headers.get("x-forwarded-proto")?.split(",")[0].trim();
+  const secure = process.env.VERCEL === "1" || new URL(request.url).protocol === "https:" || forwardedProtocol === "https";
   const name = secure ? "__Host-one_day_browser" : "one_day_browser";
   const cookies = request.headers.get("cookie") ?? "";
   if (cookies.length > 16384) throw new Error("INVALID_BODY");

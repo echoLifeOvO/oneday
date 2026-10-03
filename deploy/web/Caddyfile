@@ -1,0 +1,7 @@
+oneday.love, www.oneday.love {
+  encode zstd gzip
+  request_body {
+    max_size 32KB
+  }
+  reverse_proxy web:3000
+}

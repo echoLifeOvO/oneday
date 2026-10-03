@@ -1,0 +1,17 @@
+**
+!package.json
+!package-lock.json
+!next.config.ts
+!next-env.d.ts
+!tsconfig.json
+!app
+!app/**
+!components
+!components/**
+!lib
+!lib/**
+!public
+!public/**
+!scripts
+!scripts/prepare-maplibre.mjs
+!Dockerfile

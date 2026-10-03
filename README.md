@@ -47,7 +47,7 @@
 
 - **看看别人的一天。** 转动地球，或搜索一个地方。有日记的地区会一直亮着，靠近后可以打开当地的记录；点一条流过屏幕的弹幕，也能直接走进那个人的一天。地区里可以查看不同日期的日记，点开卡片后左右切换。
 - **留下自己的一天。** 写一段最多 200 字的记录，自行选择县市或城镇，填上这一天大概的花费、币种，以及 0–100 分的个人感受。没有标题，日期自动使用发布当天。
-- **公开聊两句。** 无需注册或登录，每次发布使用随机名字。可以公开留言，没有私聊。
+- **公开聊两句。** 无需注册或登录，每次发布都使用新的、不重复的匿名名字。可以公开留言，没有私聊。
 
 分数只是记录者当天的主观感受。普通的一天也可以写，不需要先发生什么特别的事。
 
@@ -71,6 +71,6 @@ That curiosity stayed with me. A recent conversation reminded me that people hav
 
 So I made One Day: a free, anonymous collection of everyday lives. Some people work, cook or travel; others go for a walk or simply stay at home. A day you have never experienced might give you a new idea for tomorrow.
 
-Explore the globe, search a town, or click a passing diary. Share up to 200 characters with a chosen location, daily spending, currency, and a personal score from 0 to 100. The date is set to today. No account is needed; each post gets a random nickname. Conversations happen through public comments, with no private messaging. The interface supports Chinese and English, including mobile browsers.
+Explore the globe, search a town, or click a passing diary. Share up to 200 characters with a chosen location, daily spending, currency, and a personal score from 0 to 100. The date is set to today. No account is needed; each publication gets a new, distinct anonymous name. Conversations happen through public comments, with no private messaging. The interface supports Chinese and English, including mobile browsers.
 
 Ideas are welcome in [Issues](https://github.com/echoLifeOvO/oneday/issues), even if you do not code. You can also fork the repository and open a PR; the maintainer reviews and merges contributions.

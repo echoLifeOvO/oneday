@@ -103,7 +103,7 @@ export class DiaryRepository {
       const parent = await client.query("SELECT id FROM diaries WHERE id=$1 AND hidden_at IS NULL FOR SHARE", [diaryId]);
       if (!parent.rows.length) throw new Error("NOT_FOUND");
       const inserted = await client.query(`INSERT INTO comments (id,diary_id,nickname,body,request_hash,moderated_at,moderation_model,moderation_policy) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-        ON CONFLICT (id) DO NOTHING RETURNING id`, [input.requestId, diaryId, nickname(input.locale), input.body, hash, approval.at, approval.model, approval.policy]);
+        ON CONFLICT (id) DO NOTHING RETURNING id`, [input.requestId, diaryId, nickname(input.locale, input.requestId, "comment"), input.body, hash, approval.at, approval.model, approval.policy]);
       const result = await client.query<Comment & { request_hash: string; hidden_at: Date | null }>("SELECT id,nickname,body,request_hash,hidden_at FROM comments WHERE id=$1 LIMIT 1", [input.requestId]);
       const row = result.rows[0];
       if (row.request_hash !== hash || row.hidden_at) throw new Error("REQUEST_CONFLICT");
@@ -120,7 +120,7 @@ export class DiaryRepository {
       await client.query("INSERT INTO places (id, metadata) VALUES ($1, $2::jsonb) ON CONFLICT (id) DO NOTHING", [place.id, JSON.stringify(place)]);
       const inserted = await client.query(`INSERT INTO diaries (id, request_hash, place_id, nickname, day_date, time_zone, body, cost, currency, score,moderated_at,moderation_model,moderation_policy)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) ON CONFLICT (id) DO NOTHING RETURNING id`,
-      [input.requestId, hash, place.id, nickname(input.locale), serverDay(input.timeZone), input.timeZone, input.body, input.cost, input.currency, input.score,approval.at,approval.model,approval.policy]);
+      [input.requestId, hash, place.id, nickname(input.locale, input.requestId, "diary"), serverDay(input.timeZone), input.timeZone, input.body, input.cost, input.currency, input.score,approval.at,approval.model,approval.policy]);
       const result = await client.query<DiaryRow>(`SELECT ${columns}, d.request_hash, d.hidden_at FROM diaries d WHERE d.id = $1 LIMIT 1`, [input.requestId]);
       if (result.rows[0].request_hash !== hash || result.rows[0].hidden_at) throw new Error("REQUEST_CONFLICT");
       await client.query("COMMIT");

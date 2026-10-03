@@ -34,6 +34,7 @@ export default function DiaryDeck({ open, onOpenChange, place, diaries, initialD
   const advanceAfterLoad = useRef<number | null>(null);
   const slide = useRef<Animation | null>(null);
   const [comments, setComments] = useState(false);
+  const [repliesDiaryId, setRepliesDiaryId] = useState<string | null>(null);
   const [newComments, setNewComments] = useState<Record<string, number>>({});
   const pointer = useRef<{ x: number; y: number } | null>(null);
   const card = useRef<HTMLElement>(null);
@@ -47,6 +48,7 @@ export default function DiaryDeck({ open, onOpenChange, place, diaries, initialD
       wheel.current = { value: 0, used: false, last: 0, direction: 0 };
       setIndex(Math.max(0, diaries.findIndex(d => d.id === initialDiaryId)));
       setComments(false);
+      setRepliesDiaryId(null);
       setNewComments({});
       advanceAfterLoad.current = null;
     }
@@ -71,14 +73,9 @@ export default function DiaryDeck({ open, onOpenChange, place, diaries, initialD
     }
     return () => slide.current?.cancel();
   }, [open, index, listing]);
-  useEffect(() => {
-    if (comments && paper.current) paper.current.scrollTo({
-      top: paper.current.scrollHeight,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-    });
-  }, [comments]);
   const activeIndex = Math.min(index, Math.max(0, diaries.length - 1));
   const day = diaries[activeIndex];
+  const commentCount = day ? Math.max(day.commentCount ?? day.comments.length, newComments[day.id] ?? 0) : 0;
   function turn(delta: number) {
     if (delta > 0 && activeIndex === diaries.length - 1 && hasMore) {
       if (!loading) { advanceAfterLoad.current = diaries.length; onLoadMore?.(); }
@@ -96,20 +93,24 @@ export default function DiaryDeck({ open, onOpenChange, place, diaries, initialD
         <Dialog.Overlay className="deck-overlay" />
         <Dialog.Content
           className={listing ? "library-stage" : "diary-stage"}
+          data-replies={comments && !listing}
           aria-describedby="deck-description"
           onCloseAutoFocus={e => e.preventDefault()}
           onOpenAutoFocus={e => { e.preventDefault(); (listing ? list.current : card.current)?.focus(); }}
-          onEscapeKeyDown={e => { if (!listing) { e.preventDefault(); setListing(true); } }}
+          onEscapeKeyDown={e => {
+            if (comments) { e.preventDefault(); setComments(false); card.current?.focus({ preventScroll: true }); }
+            else if (!listing) { e.preventDefault(); setListing(true); }
+          }}
           onKeyDown={e => {
             if ((e.target as HTMLElement).closest("input, textarea")) return;
-            if (listing) return;
+            if (listing || comments) return;
             if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
               e.preventDefault();
               turn(e.key === "ArrowLeft" ? -1 : 1);
             }
           }}
           onWheel={e => {
-            if (listing) return;
+            if (listing || comments) return;
             if (e.ctrlKey || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
             const now = performance.now();
             const intent = Math.sign(e.deltaX);
@@ -128,7 +129,7 @@ export default function DiaryDeck({ open, onOpenChange, place, diaries, initialD
             }
           }}
         >
-          <Dialog.Title className="sr-only">{name} · {listing ? t.diaryList : t.diaryCard}</Dialog.Title>
+          <Dialog.Title className="sr-only">{name} · {listing ? t.diaryList : comments ? t.responses : t.diaryCard}</Dialog.Title>
           <Dialog.Description id="deck-description" className="sr-only">
             {t.deckHelp}
           </Dialog.Description>
@@ -151,42 +152,45 @@ export default function DiaryDeck({ open, onOpenChange, place, diaries, initialD
           <div className="deck-cards">
             <article ref={card} tabIndex={-1} className="floating-diary"
               onPointerDown={e => {
-                if ((e.target as HTMLElement).closest("button, input, textarea")) return;
+                if (comments || (e.target as HTMLElement).closest("button, input, textarea")) return;
                 pointer.current = { x: e.clientX, y: e.clientY };
               }}
               onPointerUp={e => {
                 const start = pointer.current;
                 pointer.current = null;
-                if (!start) return;
+                if (!start || comments) return;
                 const dx = e.clientX - start.x, dy = e.clientY - start.y;
                 if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.5) turn(dx < 0 ? 1 : -1);
               }}
               onPointerCancel={() => { pointer.current = null; }}>
               <header className="diary-topline">
-                <button type="button" className="back-to-list" aria-label={t.backList} onClick={() => setListing(true)}><ArrowLeft size={16}/><span>{t.list}</span></button>
-                <time>{day?.date || t.write}</time>
+                <button type="button" className="back-to-list" aria-label={comments ? t.backDiary : t.backList} onClick={() => {
+                  if (comments) { setComments(false); card.current?.focus({ preventScroll: true }); }
+                  else setListing(true);
+                }}><ArrowLeft size={16}/><span>{comments ? t.backDiary : t.list}</span></button>
+                {comments ? <span className="replies-heading">{t.responses} · {commentCount}</span> : <time>{day?.date || t.write}</time>}
                 <Dialog.Close className="icon-button" aria-label={t.closeCard}><X size={20} /></Dialog.Close>
               </header>
               {day ? <>
-                <div className="diary-paper-scroll" ref={paper}>
+                <div className="diary-paper-scroll" ref={paper} hidden={comments}>
                   <p className="diary-prose">{day.body}</p>
                   <div className="diary-signature">{day.nickname}{(day.isDemo || day.isLocal) && <span>{day.isDemo ? t.fictional : t.localRecord}</span>}</div>
-                  {comments && <DiaryReplies key={day.id} day={day} onAdded={() => setNewComments(current => ({...current,[day.id]:Math.max(current[day.id] ?? 0,day.commentCount ?? day.comments.length)+1}))}/>}
                 </div>
-                <footer className="diary-bottomline">
+                <footer className="diary-bottomline" hidden={comments}>
                   <div><small>{t.costLabel}</small><strong>{money(day.cost, day.currency)}</strong></div>
                   <div><small>{t.moodLabel}</small><strong>{day.score}<em> / 100</em></strong></div>
-                  <button className="response-toggle" aria-label={comments ? t.hideResponses : t.showResponses} aria-expanded={comments} onClick={() => setComments(!comments)}>
-                    <MessageCircle size={17} /><span>{Math.max(day.commentCount ?? day.comments.length,newComments[day.id] ?? 0)}</span>
+                  <button className="response-toggle" aria-label={`${t.showResponses} · ${commentCount}`} onClick={() => { setRepliesDiaryId(day.id); setComments(true); }}>
+                    <MessageCircle size={16} /><span>{t.responses} · {commentCount}</span>
                   </button>
                 </footer>
+                {repliesDiaryId === day.id && <DiaryReplies key={day.id} day={day} active={comments && !listing} onAdded={() => setNewComments(current => ({...current,[day.id]:Math.max(current[day.id] ?? 0,day.commentCount ?? day.comments.length)+1}))}/>}
               </> : <div className="empty-diary">
                 <p>{loading ? t.dataLoading : failed ? t.dataFailed : t.emptyDiary}</p>
                 {!loading && <button className="text-button" onClick={failed ? onRetry : onWrite}>{failed ? t.retry : t.writeMine}</button>}
               </div>}
             </article>
           </div>
-          {(diaries.length > 1 || hasMore) && <nav className="deck-navigation" aria-label={t.turnDiary}>
+          {(diaries.length > 1 || hasMore) && <nav className="deck-navigation" data-inactive={comments} inert={comments} aria-label={t.turnDiary}>
             <button aria-label={t.previous} disabled={activeIndex === 0} onClick={() => turn(-1)}><ArrowLeft size={19} /></button>
             <span aria-live="polite">{activeIndex + 1}<i> / {diaries.length}</i></span>
             <button aria-label={t.next} disabled={activeIndex === diaries.length - 1 && (!hasMore || loading)} onClick={() => turn(1)}><ArrowRight size={19} /></button>

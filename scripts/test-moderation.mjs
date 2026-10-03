@@ -79,6 +79,15 @@ test('anonymous cookie is signed, expires, is HttpOnly, and cannot be chosen by 
   const forged=browserIdentity(new Request(request.url,{headers:{cookie:'__Host-one_day_browser=chosen'}}),key,now);
   assert.notEqual(forged.id,'chosen');assert.ok(forged.cookie);
 });
+test('HTTPS behind the self-hosted proxy retains a secure signed browser cookie',()=>{
+  const key='test-only-proxy-secret'.repeat(3);
+  const request=new Request('http://web:3000/api/stream',{headers:{'x-forwarded-proto':'https'}});
+  const first=browserIdentity(request,key);
+  assert.match(first.cookie,/^__Host-one_day_browser=/);
+  assert.match(first.cookie,/; Secure$/);
+  const next=browserIdentity(new Request(request.url,{headers:{'x-forwarded-proto':'https',cookie:first.cookie.split(';')[0]}}),key);
+  assert.equal(next.id,first.id);assert.equal(next.cookie,null);
+});
 test('browser quotas are independent, refill, and retain active quotas at memory capacity',()=>{
   let now=0;const take=createBrowserLimiter(()=>now,2);
   take('a','diary')();take('a','diary')();assert.throws(()=>take('a','diary'),RateLimitError);

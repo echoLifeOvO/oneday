@@ -4,8 +4,8 @@ Next.js Route Handlers 负责后端，`pg` 负责参数化 SQL 和连接池。�
 
 ## 连接已有数据库
 
-1. 将 `.env.example` 中的 `DATABASE_URL` 配置到本地 `.env.local` 或 Vercel 服务端环境变量；不要带 `NEXT_PUBLIC_` 前缀。地址形式为 `postgresql://USER:PASSWORD@HOST:5432/DB`。远程连接按实际证书配置 TLS；私有 CA 推荐用 `PGSSL_CA_BASE64` 保存 PEM 证书的 base64（适合 Vercel 环境变量），也可用 `PGSSLROOTCERT` 指向证书文件，代码不关闭证书验证。配置 CA 时连接串不能再带 `sslmode/sslcert/sslkey/sslrootcert`，避免驱动覆盖 CA 配置。
-2. 配置服务端 `MODERATION_API_KEY`、`MODERATION_BASE_URL=https://api.deepseek.com`、`MODERATION_MODEL=deepseek-flash`；配置至少 32 位随机字符串 `ANONYMOUS_COOKIE_SECRET`，同一部署各实例共用这个签名密钥。真实 Key 仅保存在被 Git 忽略的本机 `.env.local`，不会随代码上传到 Vercel；部署时需单独配置环境变量。
+1. 将 `.env.example` 中的 `DATABASE_URL` 配置到本地 `.env.local`、Docker 的独立 `runtime.env` 或 Vercel 服务端环境变量；不要带 `NEXT_PUBLIC_` 前缀。地址形式为 `postgresql://USER:PASSWORD@HOST:PORT/DB`（本项目 PG 部署模板使用 5433）。远程连接按实际证书配置 TLS；私有 CA 推荐用 `PGSSL_CA_BASE64` 保存 PEM 证书的 base64，也可用 `PGSSLROOTCERT` 指向证书文件，代码不关闭证书验证。配置 CA 时连接串不能再带 `sslmode/sslcert/sslkey/sslrootcert`，避免驱动覆盖 CA 配置。
+2. 配置服务端 `MODERATION_API_KEY`、`MODERATION_BASE_URL=https://api.deepseek.com`、`MODERATION_MODEL=deepseek-flash`；配置至少 32 位随机字符串 `ANONYMOUS_COOKIE_SECRET`，同一部署各实例共用这个签名密钥。真实凭据保存在本机忽略文件、服务器私有运行文件或托管平台的环境变量中，不随源码提交；Docker 构建不接收这些凭据。
 3. 在已创建的空数据库上运行 `npm run db:migrate`（001–004）。迁移记录校验和，并在事务内执行；重复运行已应用的相同版本不做修改。
 4. 启动或重新部署应用。首次发帖时写入地点元数据；不需要给日记表塞演示记录。
 
@@ -52,7 +52,7 @@ Next.js Route Handlers 负责后端，`pg` 负责参数化 SQL 和连接池。�
 
 地点不用枚举限制名称。ID 最多 100，地点名/英文名各 200，行政区说明/别名各 500，国家名 100，来源 ID 200；整份紧凑 JSON 和 PG JSONB 文本分别最多 4096 bytes。PG 格式化空格及数字可能让临界值更早被拒绝。结构、坐标、范围和键名也有约束。金额输入为 type=number/valueAsNumber，状态 number 或 null；API 拒绝字符串金额；PG numeric + CHECK 拒绝负数、非有限值、超过一亿元及超过两位小数，不采用会先静默四舍五入的固定精度类型。金额增减按钮保持隐藏。
 
-浏览器每 5 秒取最近 12 条轻量弹幕，两行各 6 条。没有变化时不更新；新批次在各行动画循环边界替换，不重启动画。隐藏页签、阅读/写作时暂停，恢复时立即请求。慢请求不重叠；429 遵守 Retry-After，其他失败退避至最多 60 秒，保留原批次。地图统计、正文不随弹幕每 5 秒拉取。
+浏览器每 5 秒取最近 12 条轻量弹幕，按 ID 去重后分配到两行；只有一条时只生成一个元素，从屏幕右侧完整移出左侧后再开始下一次。没有变化时不更新；新批次在动画循环边界替换。隐藏页签、阅读/写作时暂停，恢复时立即请求。慢请求不重叠；429 遵守 Retry-After，其他失败退避至最多 60 秒，保留原批次。地图统计、正文不随弹幕每 5 秒拉取。
 
 [限流实现](../lib/server/rate-limit.ts)只维护四个固定 token bucket，全访客共享，没有 IP/User 键或增长队列；同时限制在途请求。额度检查在正文解析和数据库访问之前。
 
@@ -98,6 +98,10 @@ Cookie 为 128 位随机值 + 过期时间 + HMAC-SHA256 签名；HttpOnly、Sam
 
 来源（2026-10-03）：[OpenAI JSON mode 与 Schema 校验](https://developers.openai.com/api/docs/guides/structured-outputs)、[DeepSeek JSON Output](https://api-docs.deepseek.com/guides/json_mode/)、[DeepSeek thinking 开关](https://api-docs.deepseek.com/guides/thinking_mode/)、[DeepSeek Chat Completions 参数](https://api-docs.deepseek.com/api/create-chat-completion/)、[MDN：浏览器指纹与隐私](https://developer.mozilla.org/en-US/docs/Web/Privacy)、[Turnstile 服务端验证](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/)。
 
-测试服务器容器、权限与证书配置见 [部署说明](../deploy/postgres/README.md)。应用连接角色与执行迁移的 owner 角色分离，不要将 owner 密码配置到 Vercel。
+服务器容器、权限与证书配置见 [部署说明](../deploy/postgres/README.md)。应用连接角色与执行迁移的 owner 角色分离，不要将 owner 密码配置到网站运行环境。
 
-2026-10-03 后续按用户要求新增 004 的 `diaries.is_demo` 字段，并显式写入 10 条手机弹幕测试记录。接口只从数据库返回此标记，普通发布不接受客户端指定。测试示例无 AI 审核字段，不伪称模型通过。种子命令见项目 README；以后隐藏测试样例可由 owner 执行 `UPDATE diaries SET hidden_at=now() WHERE is_demo AND hidden_at IS NULL`，本轮未隐藏。
+2026-10-03 后续按用户要求新增 004 的 `diaries.is_demo` 字段；手机测试先写入 10 条，后增补 3 条，共 13 条虚构记录。上线前已清除这些示例及后续手工测试记录，之后新增的用户内容是正式数据。接口只从数据库返回 is_demo，普通发布不接受客户端指定；示例无 AI 审核字段，不伪称模型通过。
+
+需要复现虚构数据时，只在独立的非生产数据库中显式执行 `node scripts/seed-mobile-demo.mjs --seed-demo`。该脚本会读取 DATABASE_URL 并写库，构建、启动、迁移均不会自动调用它。
+
+新发布昵称由完整的记录 UUID 编码产生，并用 D/C/L 区分日记、评论和本机预览。同一请求重试返回原昵称，不同记录使用不同昵称；不关联浏览器身份，不回填修改历史名字。实现与回归见 `lib/nickname.ts` 和 `scripts/test-stream-and-names.mjs`。

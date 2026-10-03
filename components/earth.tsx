@@ -11,6 +11,7 @@ import * as maplibregl from "maplibre-gl";
 import type { Map as LibreMap, ExpressionSpecification } from "maplibre-gl";
 import type { FeatureCollection } from "geojson";
 import { places } from "@/lib/catalog";
+import { loadPlaceBoundary, mergeBoundaryData, type GlowData, type PlaceBoundary } from "@/lib/discovery-boundaries";
 import { mergeStats } from "@/lib/diary-stats";
 import { diaryCount, formatMoney, messages, placeName, type Locale } from "@/lib/i18n";
 import type { ViewOrigin } from "@/lib/view-origin";
@@ -72,7 +73,6 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
   const orientOrigin = useRef<() => void>(()=>{});
   const warmDestination = useRef<(place: Place) => void>(() => {});
   const refreshGlows = useRef<() => void>(() => {});
-  const refreshMarkers = useRef<() => void>(() => {});
   const updateActivity = useRef<() => void>(() => {});
 
   useImperativeHandle(ref, () => ({
@@ -92,7 +92,6 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
         );
       selected.current = place.id;
       refreshGlows.current();
-      refreshMarkers.current();
       m.setFeatureState(
         { source: "regions", id: place.id },
         { selected: true, pulse: 0 },
@@ -615,6 +614,10 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
         if (!m.getLayer(source + "-fill")) continue;
         m.setPaintProperty(source + "-fill", "fill-opacity-transition", { duration, delay: 0 });
         m.setPaintProperty(source + "-fill", "fill-opacity", glowOpacity(source, value));
+        if (m.getLayer(source + "-edge")) {
+          m.setPaintProperty(source + "-edge", "line-opacity-transition", { duration, delay: 0 });
+          m.setPaintProperty(source + "-edge", "line-opacity", glowOpacity(source, value));
+        }
       }
       element.dataset.glowTarget = value.toFixed(2);
       element.dataset.glowTransitionMs = String(duration);
@@ -682,6 +685,7 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
         warming = new AbortController();
         queueRaster();
         scheduleWarm();
+        refreshGlows.current();
       }
       resumeBreathing();
     };
@@ -698,31 +702,60 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
           return response.json() as Promise<FeatureCollection>;
         }));
         if (disposed) return;
-        m.addSource("regions", { type: "geojson", data: geo, promoteId: "id" });
-        const levels = [["glow-wide", wide, 0, 5.5], ["glow-near", near, 4, 8], ["glow-local", local, 5.5, 24]] as const;
+        const base: GlowData = { regions: geo, wide, near, local };
+        const builtIn = new Set(geo.features.map(f => String(f.properties?.id)));
+        const discovered = new Map<string, PlaceBoundary>();
+        const initialData = mergeBoundaryData(base, [...discovered.values()], latest.current.counts, selected.current);
+        m.addSource("regions", { type: "geojson", data: initialData.regions, promoteId: "id" });
+        const levels = [["glow-wide", initialData.wide, 0, 5.5], ["glow-near", initialData.near, 4, 8], ["glow-local", initialData.local, 5.5, 24]] as const;
         for (const [source, data, low, high] of levels) {
           m.addSource(source, { type: "geojson", data, promoteId: "id" });
-          const color: ExpressionSpecification = ["case", ["boolean", ["feature-state", "lit"], false],
-            ["rgba", 255, 194, 99, ["min", .9, ["*", 1.3, ["get", "alpha"]]]], "rgba(255,194,99,0)"];
+          const color: ExpressionSpecification = ["rgba", 255, 194, 99, ["min", .9, ["*", 1.3, ["get", "alpha"]]]];
           m.addLayer({ id: source + "-fill", type: "fill", source, minzoom: low, maxzoom: high,
             paint: { "fill-color": color, "fill-opacity": glowOpacity(source, breathValue), "fill-opacity-transition": { duration: 0 }, "fill-antialias": false } });
+          m.addLayer({ id: source + "-edge", type: "line", source, minzoom: low, maxzoom: high,
+            filter: ["all", ["==", ["get", "softOutline"], true], ["==", ["get", "lit"], true]],
+            paint: { "line-color": "rgba(255,194,99,0.45)", "line-width": 10, "line-blur": 8,
+              "line-opacity": glowOpacity(source, breathValue), "line-opacity-transition": { duration: 0 } } });
         }
         // Accurate geometry stays available for hit testing. The soft glow is
         // a separate dissolved shape, with feathered fills and no bright lines.
         m.addLayer({ id: "region-fill", type: "fill", source: "regions", minzoom: 5.5,
           paint: { "fill-color": "#ffc263", "fill-opacity": ["+", .001, ["*", .13, ["coalesce", ["feature-state", "pulse"], 0]]] } });
+        const pending = new Set<string>();
+        let refreshKey = "";
+        let glowDataDirty = false;
+        const applyGlows = () => {
+          if (disposed) return;
+          if (isPaused()) { glowDataDirty = true; return; }
+          glowDataDirty = false;
+          const data = mergeBoundaryData(base, [...discovered.values()], latest.current.counts, selected.current);
+          for (const [source, collection] of [["regions", data.regions], ["glow-wide", data.wide], ["glow-near", data.near], ["glow-local", data.local]] as const)
+            (m.getSource(source) as maplibregl.GeoJSONSource).setData(collection);
+          element.dataset.litRegionCount = String(Object.keys(latest.current.counts).filter(id => latest.current.counts[id] > 0).length);
+          element.dataset.resolvedRegionCount = String(discovered.size);
+          element.dataset.regionalFallbackCount = String([...discovered.values()].filter(x => !x.precise).length);
+        };
         refreshGlows.current = () => {
-          element.dataset.litRegionCount = String(places.filter(p => !!latest.current.counts[p.id]).length);
-          for (const p of places) m.setFeatureState({ source: "regions", id: p.id }, { lit: !!latest.current.counts[p.id] });
-          for (const [source, data] of levels) for (const feature of data.features) {
-            const ids = feature.properties?.placeIds as string[];
-            m.setFeatureState({ source, id: feature.properties!.id }, { lit: ids.some(id => !!latest.current.counts[id]) });
+          const key = JSON.stringify([latest.current.counts, selected.current]);
+          if (key !== refreshKey || glowDataDirty) { refreshKey = key; applyGlows(); }
+          for (const place of places) {
+            if (builtIn.has(place.id) || discovered.has(place.id) || pending.has(place.id) || (!latest.current.counts[place.id] && place.id !== selected.current)) continue;
+            pending.add(place.id);
+            void loadPlaceBoundary(place).then(boundary => {
+              if (disposed || !boundary) return;
+              discovered.set(place.id, boundary);
+              applyGlows();
+            }).catch(() => {
+              // Keep the globe and other places usable on a transient fetch
+              // failure; retry when discovery changes, never add a DOM label.
+            }).finally(() => pending.delete(place.id));
           }
         };
         refreshGlows.current();
         const hit = (point: maplibregl.PointLike): string[] => {
-          const exact = m.queryRenderedFeatures(point, { layers: ["region-fill"] }).find(f => latest.current.counts[f.properties.id] > 0 || f.properties.id === selected.current);
-          if (exact) return [String(exact.properties.id)];
+          const exact = m.queryRenderedFeatures(point, { layers: ["region-fill"] }).filter(f => latest.current.counts[f.properties.id] > 0 || f.properties.id === selected.current);
+          if (exact.length) return [...new Set(exact.map(f => String(f.properties.id)))];
           if (m.getZoom() >= 8) return [];
           const candidates = m.queryRenderedFeatures(point, { layers: ["glow-near-fill", "glow-wide-fill"] });
           return [...new Set(candidates.flatMap(f => {
@@ -779,22 +812,6 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
           if (!ids.length) { tooltip.remove(); return; }
           showSummary(ids,e.lngLat);
         });
-        const markers = new Map<string, maplibregl.Marker>();
-        refreshMarkers.current = () => {
-          for (const [id, marker] of markers) if (!latest.current.counts[id] && id !== selected.current) { marker.remove(); markers.delete(id); }
-          for (const p of places.filter(p => p.origin === "photon" && (latest.current.counts[p.id] || p.id === selected.current))) {
-            if (markers.has(p.id)) { markers.get(p.id)!.getElement().textContent = `${placeName(p,latest.current.locale)} · ${diaryCount(latest.current.counts[p.id] || 0,latest.current.locale)}`; continue; }
-            const label = document.createElement("button"); label.className = "new-place-label";
-            label.textContent = `${placeName(p,latest.current.locale)} · ${diaryCount(latest.current.counts[p.id] || 0,latest.current.locale)}`;
-            label.addEventListener("pointerenter", () => showSummary([p.id],p.center));
-            label.addEventListener("focus", () => showSummary([p.id],p.center));
-            label.addEventListener("pointerleave", () => tooltip.remove());
-            label.addEventListener("blur", () => tooltip.remove());
-            label.addEventListener("click", e => { e.stopPropagation(); if (!isPaused()) latest.current.onPlace(p.id, true); });
-            markers.set(p.id, new maplibregl.Marker({ element: label }).setLngLat(p.center).addTo(m));
-          }
-        };
-        refreshMarkers.current();
         updateActivity.current();
         latest.current.onReady();
       } catch {
@@ -821,7 +838,6 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
       warmDestination.current = () => {};
       updateActivity.current = () => {};
       refreshGlows.current = () => {};
-      refreshMarkers.current = () => {};
       canvas.removeEventListener("keydown", keyboardIntent);
       canvas.removeEventListener("pointerdown", down);
       canvas.removeEventListener("pointermove", move);
@@ -844,7 +860,6 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
     const m = map.current;
     if (!m?.getSource("regions")) return;
     refreshGlows.current();
-    refreshMarkers.current();
   }, [props.counts,props.locale]);
   return (
     <>

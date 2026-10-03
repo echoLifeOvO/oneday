@@ -20,7 +20,7 @@ export function database() {
     });
     pool.on("error", () => console.error("[database] idle connection failed"));
     // Fluid Compute must finish idle cleanup before suspending this instance.
-    attachDatabasePool(pool);
+    if (process.env.VERCEL === "1") attachDatabasePool(pool);
     state.oneDayPool = pool;
   }
   return state.oneDayPool;

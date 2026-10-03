@@ -11,6 +11,7 @@ export default function Sources() {
     <h2>Administrative boundaries</h2>
     <p>Public datasets collected by <a href="https://www.geoboundaries.org/">geoBoundaries</a>. Some boundaries have been simplified or combined for different zoom levels. Sources include © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL), IGN-F / Etalab and the US Census, with different licenses by region.</p>
     <p><a href="/data/sources.json">Local boundaries: full sources and licenses</a></p><p><a href="/data/glow-sources.json">Regional boundaries: versions and processing</a></p>
+    <p>Worldwide regional discovery shapes also use <a href="https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-1-states-provinces/">Natural Earth 5.1.2</a> (public domain). Where a town boundary is unavailable, the glow represents its wider region.</p>
     <h2>Place search and initial view</h2>
     <p><a href="https://github.com/komoot/photon">Photon</a> searches OpenStreetMap towns using the place names you type. Coordinates locate results; missing boundaries are not replaced with bounding boxes.</p>
     <p>On Vercel, the globe initially faces the approximate region of your request's IP address. We use coarse coordinates only for the initial view and do not store your IP or request GPS access. Diary locations remain your choice. If no region is available, the default globe view is used.</p>
@@ -37,6 +38,7 @@ export default function Sources() {
       不同地区适用不同许可。</p>
     <p><a href="/data/sources.json">县市边界与区域边界：完整来源、原始链接与许可</a></p>
     <p><a href="/data/glow-sources.json">远景行政区：数据版本与处理记录</a></p>
+    <p>全球区域高亮也使用 <a href="https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-1-states-provinces/">Natural Earth 5.1.2</a> 公共领域数据。尚未收录城镇细边界时，光晕表示它所在的较大区域。</p>
     <h2>城镇搜索</h2>
     <p>由 <a href="https://github.com/komoot/photon">Photon</a> 提供 OpenStreetMap 城镇检索。
       搜索只使用输入的地名，不读取设备位置。搜索结果的坐标用于定位，未收录的行政区轮廓不会以包围框代替。</p>
