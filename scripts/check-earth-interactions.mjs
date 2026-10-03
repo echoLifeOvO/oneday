@@ -41,6 +41,8 @@ let fiber=el[Object.keys(el).find(k=>k.startsWith('__reactFiber'))];
 while(fiber){let h=fiber.memoizedState;while(h){if(h.memoizedState?.current?.queryRenderedFeatures){window.earthTestMap=h.memoizedState.current;return;}h=h.next;}fiber=fiber.return;}
 throw new Error('map ref missing');
 });
+// Network delivery can finish after the layers are added; await worker geometry.
+await page.waitForFunction(()=>['regions','glow-wide','glow-near','glow-local'].every(id=>window.earthTestMap.isSourceLoaded(id)));
 const tap=async()=>{const point=await page.evaluate(center=>window.earthTestMap.project(center),place.center);await page.touchscreen.tap(box.x+point.x,box.y+point.y);};
 
 await tap();

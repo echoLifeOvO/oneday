@@ -94,7 +94,7 @@ DNS 填 IP 或域名，不填 `https://` 地址，不使用 URL 转发。Caddy �
 
 定向回归：`node --test scripts/test-discovery-boundaries.mjs scripts/test-discovery.mjs scripts/test-earth-gestures.mjs`。覆盖真实 Photon 北京标识、直辖市与中心城区区分、共享区域多地点、孔洞、多边形、清除数据后的高亮移除，以及现有手势。
 
-## 弹幕定位与手机地块点击（2026-10-03，本地修复）
+## 弹幕定位与手机地块点击（2026-10-03，已上线）
 
 定位地点时四边各预留视野的 30%，地块边界在限制方向占约 40%，自动缩放上限由 11 降至 9。已定位的单个地点再次点击即可打开日记，不再要求手机一定达到缩放等级 7；近景 `glow-local-fill` 也参与点击检测。触屏允许 8 像素内的轻微移动，拖动和双指缩放仍抑制点击。
 
