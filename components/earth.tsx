@@ -131,12 +131,12 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
         ],
         {
           padding: {
-            top: Math.min(100, height * .18),
-            bottom: Math.min(90, height * .16),
-            left: Math.min(100, width * .1),
-            right: Math.min(100, width * .1),
+            top: height * .3,
+            bottom: height * .3,
+            left: width * .3,
+            right: width * .3,
           },
-          maxZoom: 11,
+          maxZoom: 9,
           duration: instant || reducedMotion() ? 0 : 1700,
           bearing: 0,
           pitch: 0,
@@ -194,6 +194,7 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
         dragPan: false,
         scrollZoom: false,
         doubleClickZoom: false,
+        clickTolerance: 8,
         attributionControl: false,
         // One resize owner: modal/search pause must also defer drawing-buffer changes.
         trackResize: false,
@@ -409,7 +410,8 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
         return;
       }
       if (!drag || drag.id !== e.pointerId) return;
-      if (!drag.moved && Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) < 3) return;
+      const tolerance = e.pointerType === "touch" ? 8 : 3;
+      if (!drag.moved && Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) < tolerance) return;
       drag.moved = true;
       panX -= e.clientX - drag.x;
       panY -= e.clientY - drag.y;
@@ -756,16 +758,19 @@ const Earth = forwardRef<EarthHandle, Props>(function Earth(props, ref) {
         const hit = (point: maplibregl.PointLike): string[] => {
           const exact = m.queryRenderedFeatures(point, { layers: ["region-fill"] }).filter(f => latest.current.counts[f.properties.id] > 0 || f.properties.id === selected.current);
           if (exact.length) return [...new Set(exact.map(f => String(f.properties.id)))];
-          if (m.getZoom() >= 8) return [];
-          const candidates = m.queryRenderedFeatures(point, { layers: ["glow-near-fill", "glow-wide-fill"] });
+          // Feathered local glows extend beyond the exact outline too. Keep
+          // their visible area tappable at every zoom, including on phones.
+          const candidates = m.queryRenderedFeatures(point, { layers: ["glow-local-fill", "glow-near-fill", "glow-wide-fill"] });
           return [...new Set(candidates.flatMap(f => {
             const ids: string[] = typeof f.properties.placeIds === "string" ? JSON.parse(f.properties.placeIds) : f.properties.placeIds;
-            return ids.filter(id => latest.current.counts[id] > 0);
+            return ids.filter(id => latest.current.counts[id] > 0 || id === selected.current);
           }))];
         };
         const explore = (ids: string[]) => {
           element.dataset.discovered = ids.join(",");
-          if (ids.length === 1) { latest.current.onPlace(ids[0], m.getZoom() >= 7); return; }
+          // A large region may fit below zoom 7 on a phone. Once focused,
+          // another tap opens its diaries without requiring further zoom.
+          if (ids.length === 1) { latest.current.onPlace(ids[0], selected.current === ids[0] || m.getZoom() >= 7); return; }
           const children = places.filter(p => ids.includes(p.id));
           const bounds = new maplibregl.LngLatBounds();
           for (const p of children) { bounds.extend([p.bounds[0], p.bounds[1]]); bounds.extend([p.bounds[2], p.bounds[3]]); }

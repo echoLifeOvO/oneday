@@ -93,3 +93,17 @@ DNS 填 IP 或域名，不填 `https://` 地址，不使用 URL 转发。Caddy �
 - 相同高亮区域保留所有地点 ID，不能只选其中一个。弹窗打开时暂缓更新地图数据，关闭后再应用。
 
 定向回归：`node --test scripts/test-discovery-boundaries.mjs scripts/test-discovery.mjs scripts/test-earth-gestures.mjs`。覆盖真实 Photon 北京标识、直辖市与中心城区区分、共享区域多地点、孔洞、多边形、清除数据后的高亮移除，以及现有手势。
+
+## 弹幕定位与手机地块点击（2026-10-03，本地修复）
+
+定位地点时四边各预留视野的 30%，地块边界在限制方向占约 40%，自动缩放上限由 11 降至 9。已定位的单个地点再次点击即可打开日记，不再要求手机一定达到缩放等级 7；近景 `glow-local-fill` 也参与点击检测。触屏允许 8 像素内的轻微移动，拖动和双指缩放仍抑制点击。
+
+`scripts/check-earth-interactions.mjs` 使用本地 API 假数据进行真实 Chromium 浏览器回归，不写数据库。先启动本地应用，再运行：
+
+```sh
+# Playwright 可来自外部安装，项目无需增加依赖
+PLAYWRIGHT_MODULE=/path/to/node_modules/playwright node scripts/check-earth-interactions.mjs
+# 可选：EARTH_TEST_URL 指定测试地址，CHROME_PATH 指定 Chrome 可执行文件
+```
+
+已验证 390×844 触屏和 1280×800 桌面视野：定位边界宽高均不超过 41%；手机北京区域定位后 zoom 5.69，第二次点击正常打开；zoom 9.5 时精确边界外的近景光晕可点击；5 像素手指抖动可打开，拖动不会误开；弹幕能打开指定日记正文。59 项单元测试、类型检查和生产构建通过。自动化结果来自触屏模拟；随后用户在局域网手机与电脑复测确认无问题。线上发布状态见[上线记录](releases.md)。
